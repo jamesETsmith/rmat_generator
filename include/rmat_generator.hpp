@@ -17,9 +17,9 @@ class rmat_generator {
   std::uniform_real_distribution<> dis{0.0, 1.0};
 
   //  public:
-  rmat_generator(size_t n_vertices, double a = 0.57, double b = 0.19,
-                 double c = 0.19, double d = 0.05,
-                 size_t seed = std::random_device{}())
+  rmat_generator(size_t n_vertices, size_t seed = std::random_device{}(),
+                 double a = 0.57, double b = 0.19, double c = 0.19,
+                 double d = 0.05)
       : n_vertices(n_vertices),
         a(a),
         b(b),

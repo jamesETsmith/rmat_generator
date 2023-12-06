@@ -22,10 +22,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # See https://best.openssf.org/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C++
-set(COMPILE_TIME_HARDENING_FLAGS "-Wall -Wformat=2 -Wconversion -Wtrampolines -Wimplicit-fallthrough")
 # -fstrict-flex-arrays=3 requires gcc 13+ and llvm 16+
 # -D_GLIBCXX_ASSERTIONS -D_LIBCPP_ASSERT 
 # -mbranch-protection=standard
+set(COMPILE_TIME_HARDENING_FLAGS "-Wall -Wformat=2 -Wconversion -Wtrampolines -Wimplicit-fallthrough")
 set(RUN_TIME_HARDENING_FLAGS "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS -fstack-clash-protection -fcf-protection=full ")
 
 set(CMAKE_CXX_FLAGS "-g -O3 -march=native ${COMPILE_TIME_HARDENING_FLAGS} ${RUN_TIME_HARDENING_FLAGS}")
