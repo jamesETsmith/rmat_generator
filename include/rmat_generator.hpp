@@ -4,19 +4,20 @@
 // #include <algorithm>
 #include <array>
 // #include <numeric>
+#include <cassert>
 #include <cmath>
+#include <limits>
 #include <random>
 
 class rmat_generator {
-  //  private:
- public:
+ private:
   size_t const n_vertices;
   double const a, b, c, d;
   std::array<double, 4> const psum;
   std::mt19937 gen;
   std::uniform_real_distribution<> dis{0.0, 1.0};
 
-  //  public:
+ public:
   rmat_generator(size_t n_vertices, size_t seed = std::random_device{}(),
                  double a = 0.57, double b = 0.19, double c = 0.19,
                  double d = 0.05)
@@ -25,8 +26,16 @@ class rmat_generator {
         b(b),
         c(c),
         d(d),
-        // gen(std::mt19937(seed)),
         psum(std::array<double, 4>{0, a, a + b, a + b + c}) {
+    // Input checking
+    // n_vertices must be a power of two
+    size_t scale = static_cast<size_t>(std::log2(n_vertices));
+    assert(static_cast<double>(n_vertices) == std::pow(2.0, scale));
+
+    // Probabilities must be 1
+    assert(abs(a + b + c + d - 1.0) < std::numeric_limits<double>::epsilon());
+
+    // Set seed
     gen.seed(seed);
   };
 
