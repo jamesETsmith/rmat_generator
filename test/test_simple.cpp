@@ -6,7 +6,7 @@
 TEST_CASE("n_vertices=2") {
   size_t const seed = 2;
   size_t const n_vertices = 2;
-  size_t const n_trials = 1000000;
+  size_t const n_trials = 2000000;
   rmat_generator mygen(n_vertices, seed);
 
   std::vector<double> acc(n_vertices * n_vertices);
