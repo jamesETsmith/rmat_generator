@@ -17,8 +17,6 @@ jobs:
           - compiler_family: llvm
             compiler_version: 14
           - compiler_family: llvm
-            compiler_version: 15
-          - compiler_family: llvm
             compiler_version: 16
     runs-on: ubuntu-latest
 
