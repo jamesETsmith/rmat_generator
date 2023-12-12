@@ -3,11 +3,19 @@ name: "build"
 on: [push]
 
 jobs:
-  build:
+  build-matrix:
     strategy:
       fail-fast: false
-
-    name: "build"
+      matrix:
+        include:
+          - compiler_family: gcc
+            compiler_version: 11
+          - compiler_family: gcc
+            compiler_version: 12
+          - compiler_family: llvm
+            compiler_version: 13
+          - compiler_family: llvm
+            compiler_version: 14
     runs-on: ubuntu-latest
 
     steps:
@@ -15,12 +23,35 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install compilers
+        env:
+          FAMILY: ${{ matrix.compiler_family }}
+          VERSION: ${{ matrix.compiler_version }}
+        run: |
+          sudo add-apt-repository deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          if [[ "${FAMILY}" == gcc ]]; then
+              sudo apt install gcc-${VERSION} g++-${VERSION}
+              echo "CC=gcc-${VERSION}" >> "$GITHUB_ENV"
+              echo "CXX=g++-${VERSION}" >> "$GITHUB_ENV"
+          elif [[ "${FAMILY}" == llvm ]]; then
+              wget https://apt.llvm.org/llvm.sh
+              chmod +x llvm.sh
+              sudo ./llvm.sh ${VERSION} all
+              echo "CC=clang-${VERSION}" >> "$GITHUB_ENV"
+              echo "CXX=clang++-${VERSION}" >> "$GITHUB_ENV"
+          else
+              echo "[ERROR]: compiler family name not supported"
+              exit -1
+          fi
+
       - name: Download prerequisites
         run: sudo apt-get install cmake
         
       - name: CMake configure
-        run: cmake -B build
-
+        run: cmake -B build -DCMAKE_C_COMPILER=${{env.CC}} -DCMAKE_CXX_COMPILER=${{env.CXX}}
+ 
       - name: Build
         run: cmake --build build --parallel
 
