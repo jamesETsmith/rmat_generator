@@ -53,7 +53,7 @@ jobs:
         run: cmake -B build -DCMAKE_C_COMPILER=${{env.CC}} -DCMAKE_CXX_COMPILER=${{env.CXX}}
  
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --verbose --parallel 2
 
       - name: Test
-        run: ctest --test-dir build --parallel
+        run: ctest --test-dir build --parallel 2

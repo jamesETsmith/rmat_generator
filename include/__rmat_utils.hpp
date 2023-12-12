@@ -1,3 +1,6 @@
+#ifndef ____RMAT_UTILS_HPP
+#define ____RMAT_UTILS_HPP
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -96,3 +99,5 @@ double calculate_prob_error(std::vector<double>& empirical_prob) {
 
   return l2_norm;
 }
+
+#endif

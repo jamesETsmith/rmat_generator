@@ -46,9 +46,11 @@ class rmat_generator {
     // Input checking
     // n_vertices must be a power of two
     size_t scale = static_cast<size_t>(std::log2(n_vertices));
+    // try to use bit manipulation for this
     assert(static_cast<double>(n_vertices) == std::pow(2.0, scale));
 
     // Probabilities must be 1
+    // watch out for the epsilon
     assert(abs(a + b + c + d - 1.0) < std::numeric_limits<double>::epsilon());
 
     // Set seed
@@ -61,6 +63,7 @@ class rmat_generator {
     size_t rl = 0, ru = n_vertices;
     size_t cl = 0, cu = n_vertices;
 
+    // switch to bit manipulation to calculate this
     size_t n_iter = static_cast<size_t>(std::log2(n_vertices));
 
     for (size_t i = 0; i < n_iter; i++) {
