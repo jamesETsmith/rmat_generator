@@ -9,6 +9,7 @@
 #include <mutex>
 #include <numeric>
 #include <thread>
+#include <vector>
 
 void print_matrix(std::vector<double>& mat) {
   size_t n = std::lround(std::sqrt(mat.size()));
