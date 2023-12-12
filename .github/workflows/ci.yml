@@ -12,10 +12,14 @@ jobs:
             compiler_version: 11
           - compiler_family: gcc
             compiler_version: 12
-          - compiler_family: llvm
+          - compiler_family: gcc
             compiler_version: 13
           - compiler_family: llvm
             compiler_version: 14
+          - compiler_family: llvm
+            compiler_version: 15
+          - compiler_family: llvm
+            compiler_version: 16
     runs-on: ubuntu-latest
 
     steps:
