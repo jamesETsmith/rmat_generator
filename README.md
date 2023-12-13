@@ -1,4 +1,7 @@
 # rmat_generator
+
+[![build](https://github.com/jamesETsmith/rmat_generator/actions/workflows/ci.yml/badge.svg)](https://github.com/jamesETsmith/rmat_generator/actions/workflows/ci.yml)
+
 A random matrix generator using recursive matrix (R-MAT) method from [Chakrabarti, Zhan, and Faloutsos](https://www.cs.cmu.edu/~christos/PUBLICATIONS/siam04.pdf).
 
 
