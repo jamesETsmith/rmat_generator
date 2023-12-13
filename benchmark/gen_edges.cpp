@@ -36,13 +36,13 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  size_t n_vertices = program.get<int>("n_vertices");
-  size_t n_trials = program.get<int>("n_trials");
+  size_t n_vertices = static_cast<size_t>(program.get<int>("n_vertices"));
+  size_t n_trials = static_cast<size_t>(program.get<int>("n_trials"));
 
   std::vector<double> acc(n_vertices * n_vertices, 0);
   std::mutex m_acc;
 
-  size_t const N = program.get<int>("--n_threads");
+  size_t const N = static_cast<size_t>(program.get<int>("--n_threads"));
   std::vector<std::thread> threads(N);
 
   for (size_t i = 0; i < N; i++) {

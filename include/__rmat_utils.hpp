@@ -12,7 +12,7 @@
 #include <vector>
 
 void print_matrix(std::vector<double>& mat) {
-  size_t n = std::lround(std::sqrt(mat.size()));
+  size_t n = static_cast<size_t>(std::lround(std::sqrt(mat.size())));
   assert(n * n == mat.size());
   n = std::min(n, 16UL);
 
@@ -31,10 +31,10 @@ void kronecker_prod(std::vector<double>& c, std::vector<double>& a,
   c.clear();
   c.resize(a.size() * b.size());
 
-  size_t na = std::lround(std::sqrt(a.size()));
+  size_t na = static_cast<size_t>(std::lround(std::sqrt(a.size())));
   assert(na * na == a.size());
 
-  size_t nb = std::lround(std::sqrt(b.size()));
+  size_t nb = static_cast<size_t>(std::lround(std::sqrt(b.size())));
   assert(nb * nb == b.size());
 
   size_t nc = na * nb;
@@ -63,8 +63,8 @@ void get_probabilities(size_t n_vertices, std::vector<double>& probabilities) {
   std::vector<double> probabilities_base = {0.57, 0.19, 0.19, 0.05};
   probabilities = probabilities_base;
   {
-    size_t n_iter = static_cast<size_t>(std::log2(n_vertices));
-    for (size_t i = 1; i < n_iter; i++) {
+    size_t scale = static_cast<size_t>(std::log2(n_vertices));
+    for (size_t i = 1; i < scale; i++) {
       std::vector<double> prob_copy = probabilities;
       kronecker_prod(probabilities, prob_copy, probabilities_base);
     }
@@ -72,7 +72,7 @@ void get_probabilities(size_t n_vertices, std::vector<double>& probabilities) {
 }
 
 double calculate_prob_error(std::vector<double>& empirical_prob) {
-  size_t n = std::lround(std::sqrt(empirical_prob.size()));
+  size_t n = static_cast<size_t>(std::lround(std::sqrt(empirical_prob.size())));
   // Make sure we're a power of two
   assert(n > 0 && ((n & (n - 1)) == 0));
 

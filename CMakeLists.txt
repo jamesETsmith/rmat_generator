@@ -23,14 +23,15 @@ message(STATUS "HERE ${pcg-cpp_SOURCE_DIR}")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# See https://best.openssf.org/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C++
-# -fstrict-flex-arrays=3 requires gcc 13+ and llvm 16+
-# -D_GLIBCXX_ASSERTIONS -D_LIBCPP_ASSERT 
-# -mbranch-protection=standard
-set(COMPILE_TIME_HARDENING_FLAGS "-Wall -Wformat=2 -Wconversion -Wtrampolines -Wimplicit-fallthrough")
-set(RUN_TIME_HARDENING_FLAGS "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS -fstack-clash-protection -fcf-protection=full ")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE
+      STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
 
-set(CMAKE_CXX_FLAGS "-g -O3 -march=native ${COMPILE_TIME_HARDENING_FLAGS} ${RUN_TIME_HARDENING_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 add_library(rmat_generator INTERFACE)
 target_include_directories(rmat_generator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include ${pcg-cpp_SOURCE_DIR}/include)

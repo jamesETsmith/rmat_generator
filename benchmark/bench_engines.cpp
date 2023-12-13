@@ -21,8 +21,8 @@ void run_bench(size_t const n_vertices, size_t const n_threads,
       auto mygen = base_gen;
       mygen.set_seed(i);
       for (size_t i = 0; i < n_trials / n_threads; i++) {
-        auto edge = mygen.next_edge();
-        edge[0] += 1;  // Do something with edge so it's not unused
+        // Make sure we don't optimize this away
+        volatile auto edge = mygen.next_edge();
       }
     });
   }
@@ -62,9 +62,9 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  size_t const n_vertices = program.get<int>("n_vertices");
-  size_t const n_trials = program.get<int>("n_trials");
-  size_t const n_threads = program.get<int>("--n_threads");
+  size_t const n_vertices = static_cast<size_t>(program.get<int>("n_vertices"));
+  size_t const n_trials = static_cast<size_t>(program.get<int>("n_trials"));
+  size_t const n_threads = static_cast<size_t>(program.get<int>("--n_threads"));
 
   enum class engine_opts {
     mt19937 = 0,

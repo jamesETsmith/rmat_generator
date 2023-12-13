@@ -35,4 +35,5 @@
 build
 .vscode
 Testing
-perf.data
+perf.data*
+*.log
