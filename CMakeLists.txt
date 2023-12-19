@@ -39,11 +39,18 @@ target_include_directories(rmat_generator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/
 #
 # Benchmarks and demos
 #
-add_subdirectory(benchmark)
+option(BUILD_BENCH "Flag to build benchmark" OFF) # Default is off
+if (BUILD_BENCH)
+  add_subdirectory(benchmark)
+endif()
 
 #
 # Test
 #
-enable_testing()
-add_subdirectory(test)
+option(BUILD_TESTING "Flag to build tests" OFF) # Default is OFF
+if (BUILD_TESTING)
+  enable_testing()
+  add_subdirectory(test)
+endif()
+
 

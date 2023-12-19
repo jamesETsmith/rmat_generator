@@ -52,7 +52,7 @@ jobs:
         run: sudo apt-get install cmake
         
       - name: CMake configure
-        run: cmake -B build -DCMAKE_C_COMPILER=${{env.CC}} -DCMAKE_CXX_COMPILER=${{env.CXX}}
+        run: cmake -B build -DCMAKE_C_COMPILER=${{env.CC}} -DCMAKE_CXX_COMPILER=${{env.CXX}} -DBUILD_TESTING=ON -DBUILD_BENCH=ON
  
       - name: Build
         run: cmake --build build --verbose --parallel 2

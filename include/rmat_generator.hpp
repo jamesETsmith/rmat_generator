@@ -7,6 +7,12 @@
 #include <limits>
 #include <random>
 
+// For compatability
+#ifdef __EMU_CC__
+#undef noinline
+#define noinline __noinline__
+#endif
+
 #include "pcg_random.hpp"
 
 namespace detail {
@@ -147,33 +153,65 @@ class rmat_generator {
 
     // Set seed
     gen.seed(seed);
-  };
+  }
 
   void set_seed(size_t seed) { gen.seed(seed); }
 
   std::array<size_t, 2> next_edge() {
-    size_t rl = 0, ru = n_vertices;
-    size_t cl = 0, cu = n_vertices;
-
-    for (size_t i = 0; i < scale; i++) {
-      double rn = detail::stripped_uniform_real_dist<double>(gen);
-      if (rn < psum[1]) {
-        ru = (ru + rl) / 2;
-        cu = (cu + cl) / 2;
-      } else if (rn < psum[2]) {
-        ru = (ru + rl) / 2;
-        cl = (cu + cl) / 2;
-      } else if (rn < psum[3]) {
-        rl = (ru + rl) / 2;
-        cu = (cu + cl) / 2;
-      } else {
-        rl = (ru + rl) / 2;
-        cl = (cu + cl) / 2;
+    size_t dst = 0, src = 0;
+    for (size_t bit = ((size_t)1) << (scale - 1); bit >= 1; bit >>= 1) {
+      double r = detail::stripped_uniform_real_dist<double>(gen);
+      if (r > a) {      /* outside quadrant 1 */
+        if (r <= a + b) /* in quadrant 2 */
+          dst |= bit;
+        else if (r <= a + b + c) /* in quadrant 3 */
+          src |= bit;
+        else { /* in quadrant 4 */
+          dst |= bit;
+          src |= bit;
+        }
       }
     }
+    return {src, dst};
+  }
 
-    return {rl, cl};
-  };
+  std::array<size_t, 2> next_edge_noisy() {
+    size_t dst = 0, src = 0;
+    double A = a, B = b, C = c, D = d;
+    for (size_t bit = ((size_t)1) << (scale - 1); bit >= 1; bit >>= 1) {
+      double r = detail::stripped_uniform_real_dist<double>(gen);
+      if (r > A) {      /* outside quadrant 1 */
+        if (r <= A + B) /* in quadrant 2 */
+          dst |= bit;
+        else if (r <= A + B + C) /* in quadrant 3 */
+          src |= bit;
+        else { /* in quadrant 4 */
+          dst |= bit;
+          src |= bit;
+        }
+      }
+
+      /*
+        Assuming R is in [0, 1), 0.9 + 0.2 * R is in (0.90, 1.10).
+        So the new probabilities are the old +/- 10%
+      */
+      A *= (9. + 2 * detail::stripped_uniform_real_dist<double>(gen)) / 10;
+      B *= (9. + 2 * detail::stripped_uniform_real_dist<double>(gen)) / 10;
+      C *= (9. + 2 * detail::stripped_uniform_real_dist<double>(gen)) / 10;
+      D *= (9. + 2 * detail::stripped_uniform_real_dist<double>(gen)) / 10;
+      /* Used 5 random numbers. */
+
+      {
+        const double norm = 1.0 / (A + B + C + D);
+        A *= norm;
+        B *= norm;
+        C *= norm;
+      }
+      /* So long as +/- are monotonic, ensure a+b+c+d <= 1.0 */
+      D = 1.0 - (A + B + C);
+    }
+    return {src, dst};
+  }
 };
 
 #endif
